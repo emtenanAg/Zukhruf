@@ -12,6 +12,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        theme: ThemeData(
+          fontFamily: 'dubai',
+        ),
         //use MaterialApp() widget like this
         home: Welcome() //create new widget class for this 'home' to
         // escape 'No MediaQuery widget found' error
