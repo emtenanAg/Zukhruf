@@ -64,6 +64,19 @@ class myPage extends StatelessWidget {
                         size: width * 0.3),
                   ]),
                 ),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: Text('+ أضف قطعة أثاث',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 25,
+                      )),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Color.fromARGB(255, 101, 83, 59),
+                      minimumSize: Size.fromHeight(40)),
+                ),
+                const SizedBox(height: 10),
                 Expanded(
                     child: ListView.builder(
                   scrollDirection: Axis.vertical,
@@ -88,29 +101,34 @@ final makeCard = Card(
 );
 
 final makeListTile = ListTile(
-    contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-    leading: Image.asset('/images/chair.png'),
-    title: Text(
-      "قطعة - كرسي",
-      style: TextStyle(
-          color: Color.fromARGB(255, 101, 83, 59), fontWeight: FontWeight.bold),
-    ),
-    // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+  contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+  leading: Image.asset('/images/chair.png'),
+  title: Text(
+    "قطعة - كرسي",
+    style: TextStyle(
+        color: Color.fromARGB(255, 101, 83, 59), fontWeight: FontWeight.bold),
+  ),
+  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
-    subtitle: Row(
-      children: <Widget>[
-        Text("50 SR",
-            style: TextStyle(color: Color.fromARGB(255, 101, 83, 59))),
-        SizedBox(width: 5),
-        Icon(
-          Icons.check,
-          color: Colors.green,
-        ),
-        Text("مأجرة", style: TextStyle(color: Colors.green))
-      ],
+  subtitle: Row(
+    children: <Widget>[
+      Text("50 SR", style: TextStyle(color: Color.fromARGB(255, 101, 83, 59))),
+      SizedBox(width: 5),
+      Icon(
+        Icons.check,
+        color: Colors.green,
+      ),
+      Text("مأجرة", style: TextStyle(color: Colors.green))
+    ],
+  ),
+  trailing: GestureDetector(
+    child: const Icon(
+      Icons.delete,
+      color: Color.fromARGB(255, 223, 127, 120),
     ),
-    trailing:
-        Icon(Icons.keyboard_arrow_right, color: Colors.white, size: 30.0));
+    onTap: () {},
+  ),
+);
 
 final makeBottom = Container(
   height: 55.0,
