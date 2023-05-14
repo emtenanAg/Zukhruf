@@ -28,7 +28,7 @@ class Welcome extends StatelessWidget {
                           style: const TextStyle(
                             fontFamily: 'dubai',
                             color: Color.fromARGB(255, 137, 116, 89),
-                            fontSize: 50,
+                            fontSize: 30,
                           ),
                           textDirection: TextDirection.rtl),
                     )),
@@ -39,7 +39,7 @@ class Welcome extends StatelessWidget {
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Color.fromARGB(255, 101, 83, 59),
-                            fontSize: 25,
+                            fontSize: 15,
                           ),
                           textDirection: TextDirection.rtl),
                     )),

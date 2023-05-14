@@ -1,10 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'myPage.dart';
 
 class Rigester extends StatelessWidget {
   const Rigester({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController _passwordTextController = TextEditingController();
+    TextEditingController _emailTextController = TextEditingController();
     var mediaQuery = MediaQuery.of(context);
     var height = mediaQuery.size.height;
     double width = MediaQuery.of(context).size.width;
@@ -40,6 +44,7 @@ class Rigester extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     TextFormField(
+                      controller: _emailTextController,
                       textDirection: TextDirection.ltr,
                       decoration: const InputDecoration(
                         prefixIcon: Icon(Icons.email),
@@ -101,6 +106,7 @@ class Rigester extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     TextFormField(
+                      controller: _passwordTextController,
                       textDirection: TextDirection.ltr,
                       decoration: const InputDecoration(
                         prefixIcon: Icon(Icons.fingerprint),
@@ -117,7 +123,21 @@ class Rigester extends StatelessWidget {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          FirebaseAuth.instance
+                              .createUserWithEmailAndPassword(
+                                  email: _emailTextController.text,
+                                  password: _passwordTextController.text)
+                              .then((value) {
+                            print("Created New Account");
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => myPage()));
+                          }).onError((error, stackTrace) {
+                            print("Error ${error.toString()}");
+                          });
+                        },
                         child: Text('تسجيل',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,

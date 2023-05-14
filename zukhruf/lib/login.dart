@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import './myPage.dart';
 
@@ -6,6 +7,8 @@ class Login extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController _passwordTextController = TextEditingController();
+    TextEditingController _emailTextController = TextEditingController();
     var mediaQuery = MediaQuery.of(context);
     var height = mediaQuery.size.height;
     double width = MediaQuery.of(context).size.width;
@@ -17,12 +20,12 @@ class Login extends StatelessWidget {
         backgroundColor: Color.fromARGB(255, 242, 234, 219),
         body: Container(
           alignment: Alignment.center,
-          padding: const EdgeInsets.fromLTRB(50, 20, 50, 40),
+          padding: const EdgeInsets.fromLTRB(50, 20, 50, 20),
           child: Center(
               child: Form(
             child: Container(
               alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(vertical: 50),
+              padding: const EdgeInsets.symmetric(vertical: 20),
               child: Center(
                   child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -33,6 +36,7 @@ class Login extends StatelessWidget {
                       width: width),
                   SizedBox(height: height * 0.06),
                   TextFormField(
+                    controller: _emailTextController,
                     textDirection: TextDirection.ltr,
                     decoration: const InputDecoration(
                         prefixIcon: Icon(Icons.person_outline_outlined),
@@ -42,6 +46,7 @@ class Login extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   TextFormField(
+                    controller: _passwordTextController,
                     textDirection: TextDirection.ltr,
                     decoration: const InputDecoration(
                       prefixIcon: Icon(Icons.fingerprint),
@@ -59,11 +64,18 @@ class Login extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const myPage()),
-                        );
+                        FirebaseAuth.instance
+                            .signInWithEmailAndPassword(
+                                email: _emailTextController.text,
+                                password: _passwordTextController.text)
+                            .then((value) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => myPage()));
+                        }).onError((error, stackTrace) {
+                          print("Error ${error.toString()}");
+                        });
                       },
                       child: Text('تسجيل الدخول',
                           style: TextStyle(

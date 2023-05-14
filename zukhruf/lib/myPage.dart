@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:zukhruf/welcome.dart';
 
 class myPage extends StatelessWidget {
   const myPage({Key? key}) : super(key: key);
@@ -10,9 +12,22 @@ class myPage extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 101, 83, 59),
-          title: const Text('صفحتي الشخصية'),
-        ),
+            backgroundColor: Color.fromARGB(255, 101, 83, 59),
+            title: const Text('صفحتي الشخصية'),
+            actions: <Widget>[
+              ElevatedButton(
+                child: Text("Logout"),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 101, 83, 59)),
+                onPressed: () {
+                  FirebaseAuth.instance.signOut().then((value) {
+                    print("Signed Out");
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Welcome()));
+                  });
+                },
+              ),
+            ]),
         bottomNavigationBar: makeBottom,
         backgroundColor: Color.fromARGB(255, 242, 234, 219),
         body: Container(
