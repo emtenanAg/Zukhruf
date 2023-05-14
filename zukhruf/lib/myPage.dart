@@ -16,12 +16,12 @@ class _myPageState extends State<myPage> {
   final user = FirebaseAuth.instance.currentUser!;
 
   Future getDocId() async {
-    print('getdoc');
     await FirebaseFirestore.instance
         .collection('users')
         .where('email', isEqualTo: user.email)
         .get()
-        .then((snapshot) => this_user = (snapshot.docs[0].data()));
+        .then((snapshot) => ({this_user = snapshot.docs[0].data()}));
+    setState(() {});
   }
 
   Future deleteFur(int index) async {
@@ -59,7 +59,7 @@ class _myPageState extends State<myPage> {
     var mediaQuery = MediaQuery.of(context);
     var height = mediaQuery.size.height;
     double width = MediaQuery.of(context).size.width;
-
+    getDocId();
     return Scaffold(
         appBar: AppBar(
             backgroundColor: Color.fromARGB(255, 101, 83, 59),
@@ -125,6 +125,7 @@ class _myPageState extends State<myPage> {
                             MaterialPageRoute(
                                 builder: (context) => const addForm()),
                           );
+                          setState(() {});
                         },
                         child: Text('+ أضف قطعة أثاث',
                             style: TextStyle(
