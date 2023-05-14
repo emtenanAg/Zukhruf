@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'myPage.dart';
 
 class Rigester extends StatelessWidget {
@@ -9,6 +11,34 @@ class Rigester extends StatelessWidget {
   Widget build(BuildContext context) {
     TextEditingController _passwordTextController = TextEditingController();
     TextEditingController _emailTextController = TextEditingController();
+    TextEditingController _nameTextController = TextEditingController();
+    TextEditingController _adressTextController = TextEditingController();
+    TextEditingController _phoneTextController = TextEditingController();
+
+    Future addUser() async {
+      await FirebaseFirestore.instance.collection('users').add({
+        'name': _nameTextController.text,
+        'address': _adressTextController.text,
+        'phone': _phoneTextController.text,
+        'email': _emailTextController.text
+      });
+    }
+
+    Future signUp() async {
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: _emailTextController.text,
+              password: _passwordTextController.text)
+          .then((value) {
+        print("Created New Account");
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => myPage()));
+      }).onError((error, stackTrace) {
+        print("Error ${error.toString()}");
+      });
+      addUser();
+    }
+
     var mediaQuery = MediaQuery.of(context);
     var height = mediaQuery.size.height;
     double width = MediaQuery.of(context).size.width;
@@ -35,6 +65,7 @@ class Rigester extends StatelessWidget {
                         width: width),
                     const SizedBox(height: 10),
                     TextFormField(
+                      controller: _nameTextController,
                       textDirection: TextDirection.ltr,
                       decoration: const InputDecoration(
                           prefixIcon: Icon(Icons.person_outline_outlined),
@@ -55,6 +86,7 @@ class Rigester extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     TextFormField(
+                      controller: _adressTextController,
                       textDirection: TextDirection.ltr,
                       decoration: const InputDecoration(
                         prefixIcon: Icon(Icons.home),
@@ -65,51 +97,21 @@ class Rigester extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     TextFormField(
+                      controller: _phoneTextController,
                       textDirection: TextDirection.ltr,
                       decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.add_card),
-                        labelText: 'رقم البطاقة',
+                        prefixIcon: Icon(Icons.phone),
+                        labelText: 'رقم الجوال',
                         hintText: "",
                         border: OutlineInputBorder(),
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextFormField(
-                            textDirection: TextDirection.ltr,
-                            decoration: const InputDecoration(
-                              prefixIcon: Icon(Icons.account_box),
-                              labelText: 'اسم حامل البطاقة',
-                              hintText: "",
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: TextFormField(
-                            textDirection: TextDirection.ltr,
-                            decoration: const InputDecoration(
-                              labelText: 'CSV',
-                              hintText: "",
-                              border: OutlineInputBorder(),
-                              suffixIcon: IconButton(
-                                onPressed: null,
-                                icon: Icon(Icons.remove_red_eye_sharp),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
                     const SizedBox(height: 20),
                     TextFormField(
                       controller: _passwordTextController,
                       textDirection: TextDirection.ltr,
                       decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.fingerprint),
                         labelText: 'كلمة المرور',
                         hintText: "",
                         border: OutlineInputBorder(),
@@ -124,19 +126,7 @@ class Rigester extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          FirebaseAuth.instance
-                              .createUserWithEmailAndPassword(
-                                  email: _emailTextController.text,
-                                  password: _passwordTextController.text)
-                              .then((value) {
-                            print("Created New Account");
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => myPage()));
-                          }).onError((error, stackTrace) {
-                            print("Error ${error.toString()}");
-                          });
+                          signUp();
                         },
                         child: Text('تسجيل',
                             style: TextStyle(
