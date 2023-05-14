@@ -60,6 +60,13 @@ class _myPageState extends State<myPage> {
     var height = mediaQuery.size.height;
     double width = MediaQuery.of(context).size.width;
     getDocId();
+    var count = this_user['furniture'] ?? 0;
+    int num = 0;
+    if (count != 0) {
+      List<dynamic> items = this_user['furniture'];
+      num = items.length;
+    }
+
     return Scaffold(
         appBar: AppBar(
             backgroundColor: Color.fromARGB(255, 101, 83, 59),
@@ -142,7 +149,7 @@ class _myPageState extends State<myPage> {
                           child: ListView.builder(
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
-                        itemCount: this_user['furniture'].length,
+                        itemCount: num,
                         itemBuilder: (BuildContext context, int index) {
                           return Card(
                             elevation: 10.0,

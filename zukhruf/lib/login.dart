@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import './myPage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:oktoast/oktoast.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -78,6 +80,7 @@ class _LoginState extends State<Login> {
                               MaterialPageRoute(
                                   builder: (context) => myPage()));
                         }).onError((error, stackTrace) {
+                          showToast(' ${error.toString()}');
                           print("Error ${error.toString()}");
                         });
                       },

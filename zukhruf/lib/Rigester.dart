@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'myPage.dart';
+import 'package:oktoast/oktoast.dart';
 
 class Rigester extends StatelessWidget {
   const Rigester({Key? key}) : super(key: key);
@@ -30,10 +31,12 @@ class Rigester extends StatelessWidget {
               email: _emailTextController.text,
               password: _passwordTextController.text)
           .then((value) {
+        showToast("Created New Account");
         print("Created New Account");
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => myPage()));
       }).onError((error, stackTrace) {
+        showToast(' ${error.toString()}');
         print("Error ${error.toString()}");
       });
       addUser();
