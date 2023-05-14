@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:zukhruf/welcome.dart';
 import './addForm.dart';
 
+Map this_user = Map();
+
 class myPage extends StatefulWidget {
   const myPage({Key? key}) : super(key: key);
   @override
@@ -13,7 +15,6 @@ class myPage extends StatefulWidget {
 class _myPageState extends State<myPage> {
   final user = FirebaseAuth.instance.currentUser!;
 
-  Map this_user = Map();
   Future getDocId() async {
     print('getdoc');
     await FirebaseFirestore.instance
@@ -21,6 +22,30 @@ class _myPageState extends State<myPage> {
         .where('email', isEqualTo: user.email)
         .get()
         .then((snapshot) => this_user = (snapshot.docs[0].data()));
+  }
+
+  Future deleteFur(int index) async {
+    print('delete');
+    Map obj = {
+      'name': this_user['furniture'][index]['name'],
+      'desc': this_user['furniture'][index]['desc'],
+      'price': this_user['furniture'][index]['price'],
+      'rented': this_user['furniture'][index]['rented']
+    };
+
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('email', isEqualTo: user.email)
+        .get();
+
+    querySnapshot.docs.forEach((doc) {
+      // 5. Update the 'Full Name' field in this document
+      doc.reference.update({
+        'furniture': FieldValue.arrayRemove([obj])
+      });
+    });
+
+    setState(() {});
   }
 
   @override
@@ -118,7 +143,55 @@ class _myPageState extends State<myPage> {
                         shrinkWrap: true,
                         itemCount: this_user['furniture'].length,
                         itemBuilder: (BuildContext context, int index) {
-                          return makeCard;
+                          return Card(
+                            elevation: 10.0,
+                            margin: new EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 6.0),
+                            child: Container(
+                                decoration: BoxDecoration(color: Colors.white),
+                                child: ListTile(
+                                  contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  leading: Icon(Icons.chair, size: 50),
+                                  title: Text(
+                                    '${this_user['furniture'][index]['name']} | ${this_user['furniture'][index]['desc']}',
+                                    style: TextStyle(
+                                        color: Color.fromARGB(255, 101, 83, 59),
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                  subtitle: Row(
+                                    children: <Widget>[
+                                      Text(
+                                          '${this_user['furniture'][index]['price']} SR',
+                                          style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 101, 83, 59))),
+                                      SizedBox(width: 5),
+                                      Icon(
+                                        Icons.person,
+                                        color:
+                                            const Color.fromARGB(255, 0, 0, 0),
+                                      ),
+                                      Text(
+                                          '${this_user['furniture'][index]['rented']}',
+                                          style: TextStyle(
+                                              color: const Color.fromARGB(
+                                                  255, 0, 0, 0)))
+                                    ],
+                                  ),
+                                  trailing: GestureDetector(
+                                    child: const Icon(
+                                      Icons.delete,
+                                      color: Color.fromARGB(255, 223, 127, 120),
+                                    ),
+                                    onTap: () {
+                                      deleteFur(index);
+                                    },
+                                  ),
+                                )),
+                          );
                         },
                       )),
                     ],
@@ -140,7 +213,7 @@ final makeListTile = ListTile(
   contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
   leading: Image.asset('/images/chair.png'),
   title: Text(
-    "قطعة - كرسي",
+    '',
     style: TextStyle(
         color: Color.fromARGB(255, 101, 83, 59), fontWeight: FontWeight.bold),
   ),

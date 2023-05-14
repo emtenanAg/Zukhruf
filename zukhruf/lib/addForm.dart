@@ -82,6 +82,7 @@ class _addFormState extends State<addForm> {
 
     TextEditingController _nameTextController = TextEditingController();
     TextEditingController _descTextController = TextEditingController();
+    TextEditingController _priceTextController = TextEditingController();
 
     final user = FirebaseAuth.instance.currentUser!;
     Future getDocId() async {
@@ -95,7 +96,12 @@ class _addFormState extends State<addForm> {
         // 5. Update the 'Full Name' field in this document
         doc.reference.update({
           'furniture': FieldValue.arrayUnion([
-            {'name': _nameTextController.text, 'desc': _descTextController.text}
+            {
+              'name': _nameTextController.text,
+              'desc': _descTextController.text,
+              'price': _priceTextController.text,
+              'rented': 'غير مؤجرة'
+            }
           ])
         });
       });
@@ -139,6 +145,15 @@ class _addFormState extends State<addForm> {
                     ),
                   ),
                   const SizedBox(height: 10),
+                  TextFormField(
+                    controller: _priceTextController,
+                    textDirection: TextDirection.ltr,
+                    decoration: const InputDecoration(
+                      labelText: 'السعر',
+                      hintText: "",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
                   // ElevatedButton(
                   //   onPressed: () {
                   //     imgFromGallery();
@@ -158,6 +173,7 @@ class _addFormState extends State<addForm> {
                     child: ElevatedButton(
                       onPressed: () {
                         getDocId();
+                        setState(() {});
                         Navigator.push(
                           context,
                           MaterialPageRoute(
