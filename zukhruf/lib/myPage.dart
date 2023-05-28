@@ -21,7 +21,6 @@ class _myPageState extends State<myPage> {
         .where('email', isEqualTo: user.email)
         .get()
         .then((snapshot) => ({this_user = snapshot.docs[0].data()}));
-    setState(() {});
   }
 
   Future deleteFur(int index) async {
@@ -44,8 +43,27 @@ class _myPageState extends State<myPage> {
         'furniture': FieldValue.arrayRemove([obj])
       });
     });
+  }
 
-    setState(() {});
+  Future getFur() async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('email', isEqualTo: user.email)
+        .get();
+
+    String owner_id = querySnapshot.docs.first.id;
+
+    QuerySnapshot fur_snapshot = await FirebaseFirestore.instance
+        .collection('furniture')
+        .where('owner_id', isEqualTo: owner_id)
+        .get();
+    List<DocumentSnapshot> docs = fur_snapshot.docs;
+    print(docs[0].data());
+    if (docs.isEmpty) {
+      return;
+    } else {
+      return docs;
+    }
   }
 
   @override
@@ -132,7 +150,6 @@ class _myPageState extends State<myPage> {
                             MaterialPageRoute(
                                 builder: (context) => const addForm()),
                           );
-                          setState(() {});
                         },
                         child: Text('+ أضف قطعة أثاث',
                             style: TextStyle(
@@ -146,62 +163,82 @@ class _myPageState extends State<myPage> {
                       ),
                       const SizedBox(height: 10),
                       Expanded(
-                          child: ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: num,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                            elevation: 10.0,
-                            margin: new EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 6.0),
-                            child: Container(
-                                decoration: BoxDecoration(color: Colors.white),
-                                child: ListTile(
-                                  contentPadding: EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  leading: Icon(Icons.chair, size: 50),
-                                  title: Text(
-                                    '${this_user['furniture'][index]['name']} | ${this_user['furniture'][index]['desc']}',
-                                    style: TextStyle(
-                                        color: Color.fromARGB(255, 101, 83, 59),
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-                                  subtitle: Row(
-                                    children: <Widget>[
-                                      Text(
-                                          '${this_user['furniture'][index]['price']} SR',
+                          child: FutureBuilder(
+                        future: getFur(),
+                        builder: (context, AsyncSnapshot fur_snapshot) {
+                          if (fur_snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          }
+                          print(fur_snapshot.data);
+                          if (fur_snapshot == null) {
+                            return Text('No furniture found');
+                          }
+                          if (fur_snapshot.hasData) {
+                            return ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              itemCount: fur_snapshot.data!.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Card(
+                                  elevation: 10.0,
+                                  margin: new EdgeInsets.symmetric(
+                                      horizontal: 10.0, vertical: 6.0),
+                                  child: Container(
+                                      decoration:
+                                          BoxDecoration(color: Colors.white),
+                                      child: ListTile(
+                                        contentPadding: EdgeInsets.symmetric(
+                                            horizontal: 20.0, vertical: 10.0),
+                                        leading: Icon(Icons.chair, size: 50),
+                                        title: Text(
+                                          '${fur_snapshot.data![index]['name']} | ${fur_snapshot.data![index]['discreption']}',
                                           style: TextStyle(
                                               color: Color.fromARGB(
-                                                  255, 101, 83, 59))),
-                                      SizedBox(width: 5),
-                                      Icon(
-                                        Icons.person,
-                                        color:
-                                            const Color.fromARGB(255, 0, 0, 0),
-                                      ),
-                                      Text(
-                                          '${this_user['furniture'][index]['rented']}',
-                                          style: TextStyle(
+                                                  255, 101, 83, 59),
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                        subtitle: Row(
+                                          children: <Widget>[
+                                            Text(
+                                                '${fur_snapshot.data![index]['price_per_day']}SR',
+                                                style: TextStyle(
+                                                    color: Color.fromARGB(
+                                                        255, 101, 83, 59))),
+                                            SizedBox(width: 5),
+                                            Icon(
+                                              Icons.person,
                                               color: const Color.fromARGB(
-                                                  255, 0, 0, 0)))
-                                    ],
-                                  ),
-                                  trailing: GestureDetector(
-                                    child: const Icon(
-                                      Icons.delete,
-                                      color: Color.fromARGB(255, 223, 127, 120),
-                                    ),
-                                    onTap: () {
-                                      deleteFur(index);
-                                    },
-                                  ),
-                                )),
-                          );
+                                                  255, 0, 0, 0),
+                                            ),
+                                            Text(
+                                                '${fur_snapshot.data![index]['rented']}',
+                                                style: TextStyle(
+                                                    color: const Color.fromARGB(
+                                                        255, 0, 0, 0)))
+                                          ],
+                                        ),
+                                        trailing: GestureDetector(
+                                          child: const Icon(
+                                            Icons.delete,
+                                            color: Color.fromARGB(
+                                                255, 223, 127, 120),
+                                          ),
+                                          onTap: () {
+                                            deleteFur(index);
+                                          },
+                                        ),
+                                      )),
+                                );
+                              },
+                            );
+                          } else {
+                            return SizedBox(width: 5);
+                          }
                         },
-                      )),
+                      ))
                     ],
                   );
                 })));

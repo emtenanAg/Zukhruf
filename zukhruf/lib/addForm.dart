@@ -91,6 +91,15 @@ class _addFormState extends State<addForm> {
           .collection('users')
           .where('email', isEqualTo: user.email)
           .get();
+      String owner_id = querySnapshot.docs.first.id;
+      await FirebaseFirestore.instance.collection('users').add({
+        'name': _nameTextController.text,
+        'desc': _descTextController.text,
+        'price': _priceTextController.text,
+        'rented': 'غير مؤجرة',
+        'owner_id': owner_id,
+        'renter_id': ''
+      });
 
       querySnapshot.docs.forEach((doc) {
         // 5. Update the 'Full Name' field in this document
