@@ -4,11 +4,15 @@ import 'package:zukhruf/main_page.dart';
 import './welcome.dart';
 import './main_page.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:dcdg/dcdg.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: FirebaseOptions(
+    options: const FirebaseOptions(
         apiKey: "AIzaSyBQNzMRgbWuVDm-42Ag96rsvJNWtjR8z8I",
         appId: "1:1096330877405:android:325d0a9f355ea59391be34",
         messagingSenderId: "1096330877405",

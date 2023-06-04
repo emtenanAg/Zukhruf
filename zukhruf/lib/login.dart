@@ -53,6 +53,7 @@ class _LoginState extends State<Login> {
                   const SizedBox(height: 20),
                   TextFormField(
                     controller: _passwordTextController,
+                    obscureText: true,
                     textDirection: TextDirection.ltr,
                     decoration: const InputDecoration(
                       prefixIcon: Icon(Icons.fingerprint),
@@ -80,7 +81,7 @@ class _LoginState extends State<Login> {
                               MaterialPageRoute(
                                   builder: (context) => myPage()));
                         }).onError((error, stackTrace) {
-                          showToast(' ${error.toString()}');
+                          showToast('تأكد من إدخال البيانات بشكل صحيح');
                           print("Error ${error.toString()}");
                         });
                       },

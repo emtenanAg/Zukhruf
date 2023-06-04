@@ -33,7 +33,7 @@ class Welcome extends StatelessWidget {
                           textDirection: TextDirection.rtl),
                     )),
                 Align(
-                    alignment: Alignment.centerRight,
+                    alignment: Alignment.center,
                     child: Container(
                       child: Text("حضر نفسك لرحلاتٍ عديدة في عالم الأثاث...",
                           style: const TextStyle(

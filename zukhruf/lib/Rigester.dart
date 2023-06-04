@@ -31,15 +31,16 @@ class Rigester extends StatelessWidget {
               email: _emailTextController.text,
               password: _passwordTextController.text)
           .then((value) {
-        showToast("Created New Account");
+        addUser();
+        showToast("تم إنشاء حساب جديد");
         print("Created New Account");
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => myPage()));
       }).onError((error, stackTrace) {
-        showToast(' ${error.toString()}');
+        showToast(
+            'فشل التسجيل، تأكد من أن البيانات معبأة بشكل صحيح وأن الإيميل لم يتم استعماله مقدما');
         print("Error ${error.toString()}");
       });
-      addUser();
     }
 
     var mediaQuery = MediaQuery.of(context);
@@ -110,10 +111,10 @@ class Rigester extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    const SizedBox(height: 20),
                     TextFormField(
                       controller: _passwordTextController,
                       textDirection: TextDirection.ltr,
+                      obscureText: true,
                       decoration: const InputDecoration(
                         labelText: 'كلمة المرور',
                         hintText: "",

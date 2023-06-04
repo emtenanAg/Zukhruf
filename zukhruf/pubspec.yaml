@@ -46,6 +46,11 @@ dependencies:
   mime_type: ^1.0.0
   fluttertoast: ^8.2.1
   oktoast: ^3.3.1
+  image_picker_web: ^2.0.1
+  flutter_image_compress: ^2.0.3
+  dio: ^5.1.2
+  file_picker: ^5.3.2
+  dcdg: ^4.1.0
 
 dev_dependencies:
   flutter_test:
